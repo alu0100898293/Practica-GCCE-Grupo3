@@ -10,6 +10,7 @@ CREATE TABLE `gcce`.`Alumno` (
   `nivel_est_prog1` VARCHAR(45) NULL,
   `nivel_est_prog2` VARCHAR(45) NULL,
   `niv_renta` VARCHAR(45) NULL,
-  `dist_uni` VARCHAR(45) NULL,
+  `municipio` VARCHAR(45) NULL,
+  `provincia` VARCHAR(45) NULL,
   PRIMARY KEY (`cod_alu`));
 
