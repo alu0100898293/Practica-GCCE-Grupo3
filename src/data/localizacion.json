@@ -1,0 +1,14 @@
+{
+    "Provincias":[
+        "Santa Cruz de Tenerife",
+        "Las Palmas de Gran Canaria"
+    ],
+    "MunicipiosSantaCruz":[
+        "La Laguna",
+        "Santa Cruz de Tenerife"
+    ],
+    "MunicipiosLasPalmas":[
+        "Las Palmas de Gran Canaria",
+        "Gáldar"
+    ]
+}
