@@ -1,7 +1,7 @@
 CREATE TABLE `gcce`.`Acceso` (
-  `cod_alu` INT NULL,
+  `cod_alu` VARCHAR(45) NULL,
   `tipo_acceso` VARCHAR(45) NULL,
-  `nota_med_base` INT NULL,
-  `nota_med_especial` INT NULL,
-  `nota_bach` INT NULL,
-  `nota_acceso` INT NULL);
+  `nota_med_base` FLOAT NULL,
+  `nota_med_especial` FLOAT NULL,
+  `nota_bach` FLOAT NULL,
+  `nota_acceso` FLOAT NULL);

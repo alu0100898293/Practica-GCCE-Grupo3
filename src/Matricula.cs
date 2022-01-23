@@ -1,0 +1,85 @@
+namespace GCEE
+{
+    public class Matricula
+    {
+        public string CodMatricula { get; set; }
+        public string CodAlu { get; set; }
+        public int CredAprobados { get; set; }
+        public int CredMatriculados { get; set; }
+        public int Year { get; set; }
+        public bool Poat { get; set; }
+        public bool NuevoIngreso { get; set; }
+        public double CosteCredito { get; set; }
+        public bool Beca { get; set; }
+        public bool CancelaMatricula { get; set; }
+
+        const double COSTECREDITO2021 = 12.45;
+
+        public Matricula(string codAlu, int year)
+        {
+            CodAlu = codAlu;
+            CodMatricula = "matricula_" + codAlu + "_" + year;
+            Year = year;
+            CosteCredito = COSTECREDITO2021;
+            CredAprobados = 0;
+
+            var rand = new Random();
+
+            int poat = rand.Next(0, 2);
+
+            if(Year==2020)
+                NuevoIngreso = true;
+            else    
+                NuevoIngreso = false;
+
+            if (poat == 0)
+                Poat = false;
+            else
+                Poat = true;
+
+        }
+
+        /*
+        *La matricula se cancela si no se aprueba al menos cuarto de las asignaturas matriculadas
+        *Si trabaja tiene un 10% de posibilidades de cancelar
+        */
+        public void setCancelacion(bool trabaja)
+        {
+            var rand = new Random();
+
+            if((rand.Next(1, 11) == 1) && trabaja)
+                CancelaMatricula = true;
+            else
+            {
+                double cancelacion = (CredAprobados / CredMatriculados) * 100;
+
+                if (cancelacion < 25.0)
+                    CancelaMatricula = true;
+                else
+                    CancelaMatricula = false;
+            }
+        }
+
+        /*
+        Los alumnos conta nota media >= 7 y renta baja tienen un 50% de psoibilidades de tener beca
+        */
+        public void SetBeca(double notaMedia, string nivRenta)
+        {
+            var rand = new Random();
+            if(notaMedia >= 7.0)
+                if(nivRenta.Equals("Bajo"))
+                {
+                    int probBeca = rand.Next(0, 2);
+                    if (probBeca == 0)
+                        Beca = false;
+                    else
+                        Beca = true;
+                }
+                else
+                    Beca = false;
+            else
+                Beca = false;
+        }
+
+    }
+}

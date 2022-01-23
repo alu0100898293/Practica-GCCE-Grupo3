@@ -1,5 +1,5 @@
 CREATE TABLE `gcce`.`Profesor` (
-  `cod_prof` INT NOT NULL,
+  `cod_prof` VARCHAR(45) NOT NULL,
   `asig_imp` INT NULL,
   `nom_prof` VARCHAR(45) NULL,
   `apellido1` VARCHAR(45) NULL,

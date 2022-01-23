@@ -11,8 +11,8 @@
             data.loadData();
 
             Simulator simulator = new Simulator(ConfigurationManager.AppSettings, data);
-            simulator.read();
-
+            simulator.InitSimulation();
+            //simulator.Read();
         }
     }
 }

@@ -1,6 +1,6 @@
 CREATE TABLE `gcce`.`Alumno` (
-  `cod_alu` INT NOT NULL,
-  `cod_titulo` INT NULL,
+  `cod_alu` VARCHAR(45) NOT NULL,
+  `cod_titulo` VARCHAR(45) NULL,
   `estado` VARCHAR(45) NULL,
   `nom_alu` VARCHAR(45) NULL,
   `apellido1` VARCHAR(45) NULL,
