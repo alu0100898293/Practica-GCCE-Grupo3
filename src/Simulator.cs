@@ -77,8 +77,21 @@ namespace GCEE
             NumCursosSimular = 6;
         }
 
-        public void InitSimulation(){
-                            
+        private void ClearAllLists(){
+            Alumnos.Clear();
+            Profesores.Clear();
+            Asignaturas.Clear();
+            Titulaciones.Clear();
+            ServiciosExt.Clear();
+            Matriculas.Clear();
+            CalifAcademicas.Clear();
+            Accesos.Clear();
+            Cohortes.Clear();
+        }
+
+        public void InitSimulation()
+        {
+            ClearAllLists();                        
             var rand = new Random();
 
             Console.WriteLine("Comenzando generación de titulaciones");
@@ -381,6 +394,11 @@ namespace GCEE
                 probAbandono = 0.0;
 
             return probAbandono;
+        }
+
+        public void StoreSimulation()
+        {
+
         }
 
         private Profesor GetProfesor(string codProf){
