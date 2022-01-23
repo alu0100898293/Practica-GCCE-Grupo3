@@ -96,8 +96,36 @@ namespace GCEE
                     RentaNum += 5;
                     break;
             }
-
             return nivelEstudios;
+        }
+
+        /*
+        * Si ha cancelado la matricula y quedan menos de dos años a simular el alumno puede estar 
+        *    pausado o ha abandonado, más años es siempre abandono
+        */
+        public void CancelacionMatricula(int yearRestantes, double probAbandono)
+        {
+            if(yearRestantes < 2)
+            {
+                var rand = new Random();
+
+                if(rand.NextDouble()*100 > probAbandono)
+                    Estado = "Pausado";
+                else
+                    Estado = "Abandono";
+            }
+            else
+                Estado = "Abandono";
+        }
+
+        public void CalcularAbandono(double probAbandono)
+        {
+            var rand = new Random();
+
+            if(rand.NextDouble()*100 > probAbandono)
+                Estado = "Activo";
+            else
+                Estado = "Abandono";
         }
     }
 }

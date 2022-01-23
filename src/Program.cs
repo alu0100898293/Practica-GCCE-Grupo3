@@ -10,8 +10,8 @@
             StaticData data = new StaticData();
             data.loadData();
 
-            Simulator simulator = new Simulator(ConfigurationManager.AppSettings, data);
-            simulator.InitSimulation();
+            //Simulator simulator = new Simulator(ConfigurationManager.AppSettings, data);
+            //simulator.InitSimulation();
             //simulator.Read();
         }
     }
