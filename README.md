@@ -95,11 +95,20 @@ Cuando se determina si el alumno abandona o no, se calcula la probabilidad de ab
 
 **Flujo**
 
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
+    ┌─────────────────────────────┐
+    │                             │
+    │  ┌────────────┐        ┌────┴───┐
+    ├──┤ Titulacion ├────────► Alumno ◄───────────────────┐
+    │  └──────┬─────┘        └────▲───┘                   │
+    │         │                   │                       │
+    │         │                   │                       │
+    │  ┌──────▼─────┐    ┌────────┴─────────┐       ┌─────▼─────┐
+    │  │ Asignatura ├───►│ Calif. Academica ◄───────┤ Matricula │
+    │  └────────────┘    └────────▲─────────┘       └─────▲─────┘
+    │                             │                       │
+    │                             │                       │
+    │                         ┌───┴────┐        ┌─────────┴──────────┐
+    │                         │ Acceso │        │ Servicios Externos │
+    │                         └────────┘        └─────────▲──────────┘
+    │                                                     │
+    └─────────────────────────────────────────────────────┘
