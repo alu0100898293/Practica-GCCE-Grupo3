@@ -46,7 +46,7 @@ namespace GCEE
             if( (rand.Next(1, 11) == 1) && trabaja)
                 CancelaMatricula = true;
             else
-                //Si se matricula en menos de 5 asignaturas, no importa si no aprueba un 25%
+                //Si se matricula en menos de 6 asignaturas, no importa si no aprueba un 25%
                 if(numAsignaturas > 5)
                 {
                     double cancelacion = ((double)CredAprobados / CredMatriculados) * 100;

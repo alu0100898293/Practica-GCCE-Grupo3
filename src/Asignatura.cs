@@ -23,7 +23,7 @@ namespace GCEE
 
             Especial = especial;
 
-            //dificultad baja al 25%, media al 50% y alata al 25%;
+            //dificultad baja al 25%, media al 50% y alta al 25%;
             int dif = rand.Next(1, 5);
             if(dif < 2)
                 Dificultad = "baja";
