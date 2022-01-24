@@ -322,7 +322,7 @@ namespace GCEE
                     if(califAcademicaTmp.CalifNum < 5.0)
                         asignaturasPendientes.Insert(0, asignatura);
                     else
-                        creditosAprobados = asignatura.CredAsignatura;
+                        creditosAprobados += asignatura.CredAsignatura;
                     
                     Console.WriteLine("\t\t Calificación generada con los siguientes parámetros:");
                     Console.WriteLine("\t\t\t Alumno: " + alumno.CodAlu);
@@ -331,7 +331,7 @@ namespace GCEE
                 }
 
                 matriculaTmp.CredAprobados = creditosAprobados;
-                matriculaTmp.setCancelacion(GetServiciosExternosByAlu(alumno.CodAlu).Trabaja);
+                matriculaTmp.setCancelacion(GetServiciosExternosByAlu(alumno.CodAlu).Trabaja, numAsiganutasMatriculadas);
                 Matriculas.Add(matriculaTmp);
 
                 Console.WriteLine("\t\t Matrícula generada con código: " + matriculaTmp.CodMatricula);
@@ -345,7 +345,7 @@ namespace GCEE
                 else
                 {   
                     double probAbandono = ProbabilidadAbandono(i, GetTitulacion(alumno.CodTitulo).ProbAbandono, notaMedia);
-                    
+
                     //Si ha cancelado la matricula, ha abandonado o bien pausado
                     if(matriculaTmp.CancelaMatricula)
                     {
@@ -390,7 +390,7 @@ namespace GCEE
             else if((notaMedia >= 8.0))
                 probAbandono -= 15.0;
             else if((notaMedia >= 6.0))
-                probAbandono += 0.0;
+                probAbandono -= 7.5;
             else if((notaMedia >= 5.0))
                 probAbandono += 5.0;
             else

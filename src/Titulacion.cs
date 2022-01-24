@@ -45,12 +45,12 @@ namespace GCEE
 
             SetTipoEst(tipoEst);
 
-            //Tipo 1 y 2 son letras con probabilidad de entre 0 y 40
+            //Tipo 1 y 2 son letras con probabilidad de entre 0 y 25
             if(tipoEst < 3)
-                ProbAbandono = rand.NextDouble() * (0.40-0.0) + 0.0; //random.NextDouble() * (maximum - minimum) + minimum;
-            //Tipo 3, 4 y 5 son ciencias con probabilidad de entre 35 y 75
+                ProbAbandono = rand.NextDouble() * 0.25; //random.NextDouble() * (maximum - minimum) + minimum;
+            //Tipo 3, 4 y 5 son ciencias con probabilidad de entre 25 y 50
             else
-                ProbAbandono = rand.NextDouble() * (0.75-0.35) + 0.35;
+                ProbAbandono = rand.NextDouble() * (0.50-0.25) + 0.25;
         }
 
         public void SetTipoEst(int tip){

@@ -44,7 +44,7 @@ namespace GCEE
         {
             var rand = new Random();
 
-            double margenSuperior = 1.5, margenInferior = 1.5;
+            double margenSuperior = 1.5, margenInferior = 0.5;
 
             if(beca)
             {
@@ -70,7 +70,7 @@ namespace GCEE
             }
 
             margenSuperior += notaMedia;
-            margenInferior -= notaMedia;
+            margenInferior = notaMedia - margenInferior;
 
             margenSuperior = margenSuperior <= 10.0 ? margenSuperior : 10.0;
             margenInferior = margenInferior >= 0.0 ? margenInferior : 0.0;

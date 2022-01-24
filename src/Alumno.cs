@@ -121,8 +121,8 @@ namespace GCEE
         public void CalcularAbandono(double probAbandono)
         {
             var rand = new Random();
-
-            if(rand.NextDouble()*100 > probAbandono)
+            
+            if( (rand.NextDouble()*100) > probAbandono)
                 Estado = "Activo";
             else
                 Estado = "Abandono";

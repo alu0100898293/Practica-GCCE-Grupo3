@@ -39,21 +39,25 @@ namespace GCEE
         *La matricula se cancela si no se aprueba al menos cuarto de las asignaturas matriculadas
         *Si trabaja tiene un 10% de posibilidades de cancelar
         */
-        public void setCancelacion(bool trabaja)
-        {
+        public void setCancelacion(bool trabaja, int numAsignaturas)
+        {   
             var rand = new Random();
 
-            if((rand.Next(1, 11) == 1) && trabaja)
+            if( (rand.Next(1, 11) == 1) && trabaja)
                 CancelaMatricula = true;
             else
-            {
-                double cancelacion = (CredAprobados / CredMatriculados) * 100;
+                //Si se matricula en menos de 5 asignaturas, no importa si no aprueba un 25%
+                if(numAsignaturas > 5)
+                {
+                    double cancelacion = ((double)CredAprobados / CredMatriculados) * 100;
 
-                if (cancelacion < 25.0)
-                    CancelaMatricula = true;
+                    if (cancelacion < 25.0)
+                        CancelaMatricula = true;
+                    else
+                        CancelaMatricula = false;
+                }
                 else
                     CancelaMatricula = false;
-            }
         }
 
         /*
