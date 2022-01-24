@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "CsvHelper/27.2.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/CsvHelper.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {}
+        }
+      },
       "Microsoft.Win32.SystemEvents/6.0.0": {
         "type": "package",
         "compile": {
@@ -143,6 +152,30 @@
     }
   },
   "libraries": {
+    "CsvHelper/27.2.1": {
+      "sha512": "uS5ix5hL9gL5taiAG//CScyJa8Fn1ZOh3FDhDvf4laboESFs84mCNropfp7PIt8xCkyQofljFpqu1B5UnSXjyA==",
+      "type": "package",
+      "path": "csvhelper/27.2.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "csvhelper.27.2.1.nupkg.sha512",
+        "csvhelper.nuspec",
+        "lib/net45/CsvHelper.dll",
+        "lib/net45/CsvHelper.xml",
+        "lib/net47/CsvHelper.dll",
+        "lib/net47/CsvHelper.xml",
+        "lib/net5.0/CsvHelper.dll",
+        "lib/net5.0/CsvHelper.xml",
+        "lib/net6.0/CsvHelper.dll",
+        "lib/net6.0/CsvHelper.xml",
+        "lib/netstandard2.0/CsvHelper.dll",
+        "lib/netstandard2.0/CsvHelper.xml",
+        "lib/netstandard2.1/CsvHelper.dll",
+        "lib/netstandard2.1/CsvHelper.xml"
+      ]
+    },
     "Microsoft.Win32.SystemEvents/6.0.0": {
       "sha512": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A==",
       "type": "package",
@@ -382,6 +415,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "CsvHelper >= 27.2.1",
       "Newtonsoft.Json >= 13.0.1",
       "System.Configuration.ConfigurationManager >= 6.0.0"
     ]
@@ -423,6 +457,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "CsvHelper": {
+            "target": "Package",
+            "version": "[27.2.1, )"
+          },
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.1, )"

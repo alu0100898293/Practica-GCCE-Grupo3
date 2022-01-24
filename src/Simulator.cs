@@ -1,8 +1,12 @@
 namespace GCEE
 {
     using System;
-    using System.Collections;
     using System.Collections.Specialized;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+    using CsvHelper;
+    
     class Simulator
     {
         const string SEPARATOR = "=======================";
@@ -204,12 +208,12 @@ namespace GCEE
             Console.WriteLine("Comenzando generación de cohortes");
             //Generar Cohortes
             for(int x=0; x<NumCursos; x++)
+            {
+                Cohortes.Add(new List<Alumno>());
                 for(int i=0; i<NumAlumnosNuevos; i++)
                 {
                     Console.WriteLine("\t Comenzando generación de alumno");
                     Alumno alumnoTmp = new Alumno(SData.getNombre(), SData.getApellido(), SData.getApellido(), i+1, x);
-                    Acceso accesoTmp = new Acceso(alumnoTmp.CodAlu);
-                    ServiciosExternos serviciosExtTmp = new ServiciosExternos(alumnoTmp.CodAlu);
 
                     String provincia = SData.getProvincia();
                     alumnoTmp.SetLocalizacion(provincia, SData.getMunicipio(provincia));
@@ -218,11 +222,21 @@ namespace GCEE
 
                     Cohortes[x].Add(alumnoTmp); 
                     Alumnos.Add(alumnoTmp);
+
+                    Console.WriteLine("\t\t Comenzando generación de acceso");
+                    Acceso accesoTmp = new Acceso(alumnoTmp.CodAlu);
                     Accesos.Add(accesoTmp);
+                    Console.WriteLine("\t\t Acceso generado");
+
+                    Console.WriteLine("\t\t Comenzando generación de servicio externo:");
+                    ServiciosExternos serviciosExtTmp = new ServiciosExternos(alumnoTmp.CodAlu);
+                    serviciosExtTmp.setRenta(GetTitulacion(alumnoTmp.CodTitulo).TipTitulacion);
                     ServiciosExt.Add(serviciosExtTmp);
+                    Console.WriteLine("\t\t Servicio Externo generado con código: " + serviciosExtTmp.NumSS);
 
                     Console.WriteLine("\t Alumno generado con código: " + alumnoTmp.CodAlu);
                 }
+            }
 
             Console.WriteLine("Generación de cohortes finalizada");
             Console.WriteLine(SEPARATOR);
@@ -243,8 +257,9 @@ namespace GCEE
 
         private void SimularCalificaciones(Alumno alumno)
         {
-            List<Asignatura> asignaturasPendientes = GetTitulacion(alumno.CodTitulo).Asignaturas;
+            List<Asignatura> asignaturasPendientes = GetTitulacion(alumno.CodTitulo).Asignaturas.ToList();
             List<Asignatura> asignaturasMatriculadas = new List<Asignatura>();
+
             int creditosMat, numAsiganutasMatriculadas, creditosAprobados;
             double notaMedia = GetAcceso(alumno.CodAlu).NotaAccesoBaseDiez;
             double notaAcumulada;
@@ -253,8 +268,8 @@ namespace GCEE
             for(int i=0; i<NumCursosSimular && alumnoActivo; i++)
             {
                 Console.WriteLine("\t Comenzando generación de matricula");
-
-                Matricula matriculaTmp = new Matricula(alumno.CodAlu, YEAR+i);
+                
+                Matricula matriculaTmp = new Matricula(alumno.CodAlu, alumno.Year+i, i==0);
                 matriculaTmp.SetBeca(notaMedia, alumno.NivRenta);
 
                 creditosMat = 0;
@@ -278,7 +293,6 @@ namespace GCEE
                     //Quitar de la lista de asignaturas matriculadas
                     asignaturasMatriculadas.RemoveAt(asignaturasMatriculadas.Count-1);
                 }
-
                 matriculaTmp.CredMatriculados = creditosMat;
                 numAsiganutasMatriculadas = asignaturasMatriculadas.Count();
                 bool presentado;
@@ -352,8 +366,6 @@ namespace GCEE
                         }
                     }
                 }
-                    
-                    
             }
         }
 
@@ -398,9 +410,291 @@ namespace GCEE
 
         public void StoreSimulation()
         {
+            Console.WriteLine(SEPARATOR);
+            Console.WriteLine("Comenzando escritura de archivos .csv");
 
+            WriteTitulaciones();
+            WriteProfesores();
+            WriteAsignaturas();
+            WriteAlumnos();
+            WriteAccesos();
+            WriteServiciosExternos();
+            WriteMatriculas();
+            WriteCalifAcademicas();
+
+            Console.WriteLine("Finalizada escritura de archivos .csv");
         }
 
+        private void WriteTitulaciones()
+        {
+            string filePath = @"./output/titulacion.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_titulo");
+            csvWriter.WriteField("num_asignaturas");
+            csvWriter.WriteField("num_cursos");
+            csvWriter.WriteField("tip_titulacion");
+            csvWriter.WriteField("tip_estudios");
+            csvWriter.WriteField("total_creditos");
+            csvWriter.WriteField("prob_abandono");
+            csvWriter.NextRecord();
+
+            foreach (var titulacion in Titulaciones)
+            {
+                csvWriter.WriteField(titulacion.CodTitulo);
+                csvWriter.WriteField(titulacion.NumAsignaturas);
+                csvWriter.WriteField(titulacion.NumCursos);
+                csvWriter.WriteField(titulacion.TipTitulacion);
+                csvWriter.WriteField(titulacion.TipEstudios);
+                csvWriter.WriteField(titulacion.TotalCreditos);
+                csvWriter.WriteField((titulacion.ProbAbandono*100).ToString("00.00"));
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla titulación escrita con éxito en: " + filePath);
+        }
+        private void WriteProfesores()
+        {
+            string filePath = @"./output/profesor.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_prof");
+            csvWriter.WriteField("asig_imp");
+            csvWriter.WriteField("nom_prof");
+            csvWriter.WriteField("apellido1");
+            csvWriter.WriteField("apellido2");
+            csvWriter.WriteField("catego");
+            csvWriter.WriteField("tiempo_ull");
+            csvWriter.WriteField("year");
+            csvWriter.NextRecord();
+
+            foreach (var profesor in Profesores)
+            {
+                csvWriter.WriteField(profesor.CodProf);
+                csvWriter.WriteField(profesor.AsigImp);
+                csvWriter.WriteField(profesor.NomProf);
+                csvWriter.WriteField(profesor.Apellido1);
+                csvWriter.WriteField(profesor.Apellido2);
+                csvWriter.WriteField(profesor.Catego);
+                csvWriter.WriteField(profesor.TiempoULL);
+                csvWriter.WriteField(profesor.Year);
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla profesor escrita con éxito en: " + filePath);
+        }
+        private void WriteAsignaturas()
+        {
+            string filePath = @"./output/asignatura.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_asignatura");
+            csvWriter.WriteField("cod_titulo");
+            csvWriter.WriteField("dificultad");
+            csvWriter.WriteField("profesor");
+            csvWriter.WriteField("cred_asignatura");
+            csvWriter.WriteField("nom_asignatura");
+            csvWriter.WriteField("curso");
+            csvWriter.WriteField("cuatrimestre");
+            csvWriter.WriteField("tipo_asignatura");
+            csvWriter.WriteField("especial");
+            csvWriter.NextRecord();
+
+            foreach (var asignatura in Asignaturas)
+            {
+                csvWriter.WriteField(asignatura.CodAsignatura);
+                csvWriter.WriteField(asignatura.CodTitulo);
+                csvWriter.WriteField(asignatura.Dificultad);
+                csvWriter.WriteField(asignatura.Profesor);
+                csvWriter.WriteField(asignatura.CredAsignatura);
+                csvWriter.WriteField(asignatura.NomAsigantura);
+                csvWriter.WriteField(asignatura.Curso);
+                csvWriter.WriteField(asignatura.Cuatrimestre);
+                csvWriter.WriteField(asignatura.TipoAsignatura);
+                csvWriter.WriteField(asignatura.Especial);
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla asignatura escrita con éxito en: " + filePath);
+        }
+        private void WriteAlumnos()
+        {
+            string filePath = @"./output/alumno.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_alu");
+            csvWriter.WriteField("cod_titulo");
+            csvWriter.WriteField("estado");
+            csvWriter.WriteField("nom_alu");
+            csvWriter.WriteField("apellido1");
+            csvWriter.WriteField("apellido2");
+            csvWriter.WriteField("sexo");
+            csvWriter.WriteField("year");
+            csvWriter.WriteField("nivel_est_prog1");
+            csvWriter.WriteField("nivel_est_prog2");
+            csvWriter.WriteField("niv_renta");
+            csvWriter.WriteField("municipio");
+            csvWriter.WriteField("provincia");
+            csvWriter.NextRecord();
+
+            foreach (var alumno in Alumnos)
+            {
+                csvWriter.WriteField(alumno.CodAlu);
+                csvWriter.WriteField(alumno.CodTitulo);
+                csvWriter.WriteField(alumno.Estado);
+                csvWriter.WriteField(alumno.NomAlu);
+                csvWriter.WriteField(alumno.Apellido1);
+                csvWriter.WriteField(alumno.Apellido2);
+                csvWriter.WriteField(alumno.Sexo);
+                csvWriter.WriteField(alumno.Year);
+                csvWriter.WriteField(alumno.NivelEstProg1);
+                csvWriter.WriteField(alumno.NivelEstProg2);
+                csvWriter.WriteField(alumno.NivRenta);
+                csvWriter.WriteField(alumno.Municipio);
+                csvWriter.WriteField(alumno.Provincia);
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla alumno escrita con éxito en: " + filePath);
+        }
+        private void WriteServiciosExternos()
+        {
+            string filePath = @"./output/serviciosExternos.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("num_ss");
+            csvWriter.WriteField("cod_alumno");
+            csvWriter.WriteField("trabaja");
+            csvWriter.WriteField("sueldo");
+            csvWriter.NextRecord();
+
+            foreach (var servicioExterno in ServiciosExt)
+            {
+                csvWriter.WriteField(servicioExterno.NumSS);
+                csvWriter.WriteField(servicioExterno.CodAlu);
+                csvWriter.WriteField(servicioExterno.Trabaja);
+                csvWriter.WriteField(servicioExterno.Sueldo.ToString("0000.00"));
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla servicios externos escrita con éxito en: " + filePath);
+        }
+        private void WriteAccesos()
+        {
+            string filePath = @"./output/acceso.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_alu");
+            csvWriter.WriteField("tipo_acceso");
+            csvWriter.WriteField("nota_med_base");
+            csvWriter.WriteField("nota_med_especial");
+            csvWriter.WriteField("nota_bach");
+            csvWriter.WriteField("nota_acceso");
+            csvWriter.NextRecord();
+
+            foreach (var acceso in Accesos)
+            {
+                csvWriter.WriteField(acceso.CodAlu);
+                csvWriter.WriteField(acceso.TipoAcceso);
+                csvWriter.WriteField(acceso.NotaMedBase.ToString("00.00"));
+                csvWriter.WriteField(acceso.NotaMedEspecial.ToString("00.00"));
+                csvWriter.WriteField(acceso.NotaBach.ToString("00.00"));
+                csvWriter.WriteField(acceso.NotaAcceso.ToString("00.00"));
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla acceso escrita con éxito en: " + filePath);
+        }
+        private void WriteMatriculas()
+        {
+            string filePath = @"./output/matricula.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_matricula");
+            csvWriter.WriteField("cod_alu");
+            csvWriter.WriteField("cred_aprobados");
+            csvWriter.WriteField("cred_matriculados");
+            csvWriter.WriteField("year");
+            csvWriter.WriteField("poat");
+            csvWriter.WriteField("nuevo_ingreso");
+            csvWriter.WriteField("coste_credito");
+            csvWriter.WriteField("beca");
+            csvWriter.WriteField("cancela_matricula");
+            csvWriter.NextRecord();
+
+            foreach (var matricula in Matriculas)
+            {
+                csvWriter.WriteField(matricula.CodMatricula);
+                csvWriter.WriteField(matricula.CodAlu);
+                csvWriter.WriteField(matricula.CredAprobados);
+                csvWriter.WriteField(matricula.CredMatriculados);
+                csvWriter.WriteField(matricula.Year);
+                csvWriter.WriteField(matricula.Poat);
+                csvWriter.WriteField(matricula.NuevoIngreso);
+                csvWriter.WriteField(matricula.CosteCredito);
+                csvWriter.WriteField(matricula.Beca);
+                csvWriter.WriteField(matricula.CancelaMatricula);
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla matricula escrita con éxito en: " + filePath);
+        }
+        private void WriteCalifAcademicas()
+        {
+            string filePath = @"./output/califAcademica.csv"; 
+
+            using var writer = new StreamWriter(filePath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteField("cod_matricula");
+            csvWriter.WriteField("cod_titulo");
+            csvWriter.WriteField("cod_profesor");
+            csvWriter.WriteField("cod_alu");
+            csvWriter.WriteField("cod_asignatura");
+            csvWriter.WriteField("convocatoria");
+            csvWriter.WriteField("calif_num");
+            csvWriter.WriteField("calif");
+            csvWriter.WriteField("presentado");
+            csvWriter.NextRecord();
+
+            foreach (var calificacion in CalifAcademicas)
+            {
+                csvWriter.WriteField(calificacion.CodMatricula);
+                csvWriter.WriteField(calificacion.CodTitulo);
+                csvWriter.WriteField(calificacion.CodProfesor);
+                csvWriter.WriteField(calificacion.CodAlu);
+                csvWriter.WriteField(calificacion.CodAsignatura);
+                csvWriter.WriteField(calificacion.Convocatoria);
+                csvWriter.WriteField(calificacion.CalifNum.ToString("00.00"));
+                csvWriter.WriteField(calificacion.Calif);
+                csvWriter.WriteField(calificacion.Presentado);
+                csvWriter.NextRecord();
+            }
+
+            writer.Flush();
+            Console.WriteLine("\t Tabla calificación académica escrita con éxito en: " + filePath);
+        }
         private Profesor GetProfesor(string codProf){
             
             Profesor tmp = Profesores.Find(x => x.CodProf.Equals(codProf));

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Dz6v/FZ0bF8c2rj6zBn37QcyC8henkCFCdmD9qrPOV2BOKmhU2LNBx3zbpR83kLlG6bvR0nEhYYA5Mp4oWllqg==",
+  "dgSpecHash": "KGOeVPuLsl6UPdz1DuzEu3Q4La+zyKrlQiZoJAeAI/wpcNBMYbSa3RSedp9KbFe2NIHPNIcrI0TZy1HE+t6+2Q==",
   "success": true,
   "projectFilePath": "/home/nicolas/Escritorio/GCCE/Practica-GCCE-Grupo3/src/src.csproj",
   "expectedPackageFiles": [
+    "/home/nicolas/.nuget/packages/csvhelper/27.2.1/csvhelper.27.2.1.nupkg.sha512",
     "/home/nicolas/.nuget/packages/microsoft.win32.systemevents/6.0.0/microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "/home/nicolas/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
     "/home/nicolas/.nuget/packages/system.configuration.configurationmanager/6.0.0/system.configuration.configurationmanager.6.0.0.nupkg.sha512",

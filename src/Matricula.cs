@@ -15,22 +15,18 @@ namespace GCEE
 
         const double COSTECREDITO2021 = 12.45;
 
-        public Matricula(string codAlu, int year)
+        public Matricula(string codAlu, int year, bool nuevoIngreso)
         {
             CodAlu = codAlu;
             CodMatricula = "matricula_" + codAlu + "_" + year;
             Year = year;
             CosteCredito = COSTECREDITO2021;
             CredAprobados = 0;
+            NuevoIngreso = nuevoIngreso;
 
             var rand = new Random();
 
             int poat = rand.Next(0, 2);
-
-            if(Year==2020)
-                NuevoIngreso = true;
-            else    
-                NuevoIngreso = false;
 
             if (poat == 0)
                 Poat = false;
