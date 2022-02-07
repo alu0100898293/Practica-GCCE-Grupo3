@@ -36,17 +36,11 @@ El tipo de estudios afecta a la probabilidad de abandono de la titulación:
 **Asignatura**
 
 Probabilidad del 75% de ser obligatoria y 25% de ser optativa.
-Los grados tienen dos aignaturas especiales de 12 créditos y el máster una.
+Los grados tienen dos asignaturas especiales de 12 créditos y el máster una.
 La dificultad se define con los siguientes porcentajes:
 - 25% de ser baja
 - 50% de ser media
 - 25% de ser alta 
-
-**Servicios externos**
-
-La probilidad de trabajo y el sueldo varía según el tipo de estudio:
-- 25% de posibilidad de trabajar con una renta baja-media si cursa un grado
-- 66% de posibilidad de trabajar con una renta media-alta si cursa un máster
 
 **Acceso**
 
@@ -71,6 +65,12 @@ La cancelación de matrícula depende del número de asignaturas matriculadas, l
 - Si trabaja tiene un 10% de posibilidades de cancelar
 - Si se ha matriculado en al menos 6 asiganturas y no ha aprobado un 25% de los créditos matriculados, entonces cancela.
 
+**Servicios externos**
+
+La probilidad de trabajo y el sueldo varía según el tipo de estudio:
+- 25% de posibilidad de trabajar con una renta baja-media si cursa un grado
+- 66% de posibilidad de trabajar con una renta media-alta si cursa un máster
+
 **Calificación académica**
 
 Las notas del primer año dependen de: nota de acceso, POAT, beca y dificultad de la asignatura.
@@ -81,7 +81,7 @@ Que se presente o no, varía según el tipo de asignatura:
 
 **Alumno**
 
-El estado tiene tres se define con las siguientes comprobaciones:
+El estado tiene tres posibles valores que se definen con las siguientes comprobaciones:
 - *Todas las aignaturas de la titulación aprobadadas*: el estado es **gradudado**.
 - *Matrícula cancelada*:
   - *Han pasado menos de 2 años*: el estado es **pausado** o **abandono**.
