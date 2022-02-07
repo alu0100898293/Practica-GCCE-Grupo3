@@ -81,7 +81,7 @@ Que se presente o no, varía según el tipo de asignatura:
 
 **Alumno**
 
-El estado tiene tres posibles valores que se definen con las siguientes comprobaciones:
+El estado tiene cuatro posibles valores que se definen con las siguientes comprobaciones:
 - *Todas las aignaturas de la titulación aprobadadas*: el estado es **gradudado**.
 - *Matrícula cancelada*:
   - *Han pasado menos de 2 años*: el estado es **pausado** o **abandono**.
